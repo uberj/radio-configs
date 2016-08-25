@@ -1,0 +1,79 @@
+Notes on how to program Kenwood TH-F6A on Linux
+===============================================
+
+Setup
+-----
+Install virtual box 4.3.36:
+
+	sudo sh -c "echo 'deb http://download.virtualbox.org/virtualbox/debian '$(lsb_release -cs)' contrib non-free' > /etc/apt/sources.list.d/virtualbox.list" && wget -q http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc -O- | sudo apt-key add - && sudo apt-get update && sudo apt-get install virtualbox-4.3
+
+Install guest additions (for usb stuff):
+
+	GOTO http://download.virtualbox.org/virtualbox/4.3.36/Oracle_VM_VirtualBox_Extension_Pack-4.3.36.vbox-extpack in browser
+	Should be prompted to install
+
+Install vagrant `Vagrant 1.4.3`
+
+Startup windows vm:
+
+	cd windows/ && vagrant up
+
+Stop machine (will need to do some stuff on the host machine first)
+
+Download USB to USART/COM driver (super hacky, w/e):
+
+	wget https://www.silabs.com/Support%20Documents/Software/Linux_3.x.x_VCP_Driver_Source.zip
+	unzip Linux_3.x.x_VCP_Driver_Source.zip
+
+Follow ubunut driver instructions found in CP210x_VCP_Linux_3.13.x_Release_Notes.txt:
+
+	make
+	sudo cp cp210x.ko to /lib/modules/$(uname -r)/kernel/drivers/usb/serial
+	lsmod | grep usbserial.ko
+	# If the above command returns no results insert the usbserial module, else skip the next line
+	insmod /lib/modules/<kernel-version/kernel/drivers/usb/serial/usbserial.ko
+	sudo insmod cp210x.ko
+
+
+Configure radio:
+	Go to menu section "SP/MIC JACK"
+		-> Select "PC"
+
+Turn off radio. Connect radio via USB
+
+Should see a new device at:
+	
+	uberj@machine:~/kenwood$ ls -l /dev/serial/by-id/usb-Prolific_Technology_Inc._USB-Serial_Controller-if00-port0 
+	lrwxrwxrwx 1 root root 13 Aug 23 19:36 /dev/serial/by-id/usb-Prolific_Technology_Inc._USB-Serial_Controller-if00-port0 -> ../../ttyUSB0
+
+Back to virtualbox (VM should be shutdown)
+
+	Configure COM device
+		-> VM Settings
+			-> Serial Ports
+				-> Port 1
+					Enable: (checked)
+					Port Number: COM1  # Default
+					IRQ: 4  # Default
+					I/O Port: 0x3fb  # Default
+					Port Mode: Host Device
+					Create pipe: (unchecked)
+					Port/File Path: /dev/ttyUSB0  # Path to device created by hacky driver
+
+Start up VM (Make sure radio is still off)
+
+Make sure com device looks right:
+
+	Go to start and search "Device Manager"
+	Under "Ports" you should see something like "Communications Port (COM1)". The "COM1" part is important.
+
+In windows install Kenwood software:
+
+	http://www.kenwood.com/i/products/info/amateur/image/MFX101.zip
+	(Click until installed)
+
+Run the software. Make sure the setting at `Radio -> Port Select` is aligned with what you saw in device manager.
+
+Turn the radio on
+
+Read in memory
