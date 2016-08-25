@@ -1,0 +1,14 @@
+CP210xVCPInstaller_x64.exe
+CP210xVCPInstaller_x86.exe
+CP210x_Windows_Drivers.zip
+MFX101.zip
+SLAB_License_Agreement_VCP_Windows.txt
+comdriver/
+dpinst.xml
+java/
+setup.exe
+slabvcp.cat
+slabvcp.inf
+windows/
+x64/
+x86/
