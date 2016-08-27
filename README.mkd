@@ -85,3 +85,45 @@ Mostly scrapped from: https://osdir.com/ml/recreation.radio.hardware.kenwood.th-
 Format header:
 	
 	NR FREQ STEP 0/+/- REV PL/T PL/R DCS PL/T PL/R DCS OFFSET MODE L/O NAME
+
+	NR This is the channel number. It must contain 3 digits – see leading zeros.
+	Begin with 000, not 001.
+
+	FREQ Frequency. Note the leading/trailing zeros. No decimal is used. Entry
+	may have to contain the total of 11 digits.
+
+	STEP Enter 0 for 5 KHz., 1 for 6.5 KHz., … 6 for 15 KHz., etc. on up.
+
+	0/+/- 0=Simplex, 1=shift up, 2=shift down for repeater.
+
+	REV Reverse input/output. 0=no, 1=yes.
+
+	PL/T PL on Xmit only. 0=off, 1=on.
+
+	PL/R PL (ctcss) on both Xmit and Rcv. 0=off, 1=on.
+
+	DCS Digital squelch on Xmit and Rcv. 0=off, 1=on.
+
+	PL/T See chart, p. 13 manual. What you enter in the data column is the tone’s
+
+	NUMBER, not its actual frequency. The chart numbers them 01-42, BUT they are
+	one off, since numbering in the data column begins with 00, not 01. The default
+	is 08, which is tone 88.5 Hz. This column has no function unless PL is
+	activated by a 1 in the PL/T column.
+
+	PL/R Same instructions as above.
+
+	DCS Digital squelch frequencies are also numbered (chart, p. 29), and you must
+	enter the DCS number, NOT the actual DCS code. 000=DCS 023. Entry must have 3
+	digits, see leading zeros.
+
+	OFFSET This will normally be 000600000 (=600 KHz.) on 2 meters, 005000000 (5
+			MHz.) on 70 cm. I have not had luck entering “odd splits” in this column. That
+	is best done from within Kenwood’s program.
+
+	MODE Modes are numbered. 0=FM, 1=WFM, 2=AM, 3=LSB, 4=USB, 5=CW.
+
+	L/O Channel lock out. 0=no, 1=yes.
+
+	NAME (four tabs precede channel name). Up to 8 alphanumeric characters for the
+	channel label.
