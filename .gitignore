@@ -12,3 +12,5 @@ slabvcp.inf
 windows/
 x64/
 x86/
+.*.swp
+*.pyc
