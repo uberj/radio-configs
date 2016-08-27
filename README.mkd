@@ -77,3 +77,11 @@ Run the software. Make sure the setting at `Radio -> Port Select` is aligned wit
 Turn the radio on
 
 Read in memory
+
+File Format
+-----------
+Mostly scrapped from: https://osdir.com/ml/recreation.radio.hardware.kenwood.th-f6a/2004-11/msg00079.html
+
+Format header:
+	
+	NR FREQ STEP 0/+/- REV PL/T PL/R DCS PL/T PL/R DCS OFFSET MODE L/O NAME
