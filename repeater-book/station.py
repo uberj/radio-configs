@@ -7,6 +7,7 @@ class Station(object):
     offset_direction = attr.ib()
     tone = attr.ib()
     location = attr.ib()
+    city = attr.ib()
     ST_PR = attr.ib()
     county = attr.ib()
     call = attr.ib()

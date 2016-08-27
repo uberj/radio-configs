@@ -1,7 +1,10 @@
 import sys
+
 import requests
-from station import Station
 from pyquery import PyQuery as pq
+
+from station import Station
+from kenwood import KenwoodChannelLine
 
 state_codes = {
     "OR": 41
@@ -16,10 +19,13 @@ def main(state):
 
     state_code = state_codes[state]
 
+    mem_chan = 0
     for city in [city.strip() for city in open(state + "-cities.txt", "r")]:
         stations = get_city_repeater_info(city, state_code)
         for station in stations:
-            print(station)
+            mem_chan = mem_chan + 1
+            print(KenwoodChannelLine.from_station(mem_chan, station).channelline)
+        break
 
 def parse_frequency(raw_frequency):
     offset_direction = raw_frequency[-1]
@@ -29,7 +35,7 @@ def parse_frequency(raw_frequency):
     return frequency, offset, offset_direction
 
 
-def parse_station_info(raw_tr):
+def parse_station_info(city, raw_tr):
     print(raw_tr)
     tds = raw_tr.findall('td')
     if not tds:
@@ -53,6 +59,7 @@ def parse_station_info(raw_tr):
         ST_PR=ST_PR,
         county=county,
         call=call,
+        city=city,
         use=use
     )
 
@@ -60,7 +67,7 @@ def get_city_repeater_info(city, state_code):
     dl_link = state_dl_link.format(city=city, state_code=state_code)
     d = pq(url=dl_link)
     trs = d.find('.sortable > tr')
-    return filter(None, [parse_station_info(tr) for tr in trs])
+    return filter(None, [parse_station_info(city, tr) for tr in trs])
 
 
 if __name__ == "__main__":
