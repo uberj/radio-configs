@@ -30,21 +30,20 @@ class KenwoodChannelLine(object):
     @property
     def channelline(self):
         # 002	00440400000	8	 1	   0	1	 0	  0	  18	08	 000	005000000	0	 0				IRLP NEP
-        return \
-        "{nr_0}	" \
-        "{freq_repr_1}	" \
-        "{step_2}	" \
-        "{offset_direction_3}	" \
-        "{rev_4}	" \
-        "{pl_t_xmit_5}	" \
-        "{pl_r_xmit_6}	" \
-        "{dcs_xmit_7}	" \
-        "{pl_t_8}	" \
-        "{pl_r_9}	" \
-        "{dcs_freq_10}	" \
-        "{offset_11}	" \
-        "{mode_12}	" \
-        "{l_o_13}               " \
+        return "{nr_0}\t" \
+        "{freq_repr_1}\t" \
+        "{step_2}\t" \
+        "{offset_direction_3}\t" \
+        "{rev_4}\t" \
+        "{pl_t_xmit_5}\t" \
+        "{pl_r_xmit_6}\t" \
+        "{dcs_xmit_7}\t" \
+        "{pl_t_8}\t" \
+        "{pl_r_9}\t" \
+        "{dcs_freq_10}\t" \
+        "{offset_11}\t" \
+        "{mode_12}\t" \
+        "{l_o_13}\t\t\t\t" \
         "{name_14}".format(**vars(self))
 
     @staticmethod
@@ -89,7 +88,7 @@ def calc_step(hz):
         raise UnknownBandError(hz)
 
 def calc_offset_direction(direction):
-    if not direction or direction.lower() == "n/a" or direction == "s":
+    if not direction or direction.lower() == "n/a" or direction in ("s", "x"):
         return 0
     elif direction == "+":
         return 1
@@ -104,7 +103,10 @@ def calc_name(station):
     no_city_name = name.replace(station.city, "").strip()
     if no_city_name == "":
         return station.call
-    return remove_vouls(no_city_name, 10)
+    try:
+        return remove_vouls(no_city_name, 10)
+    except ValueError:
+        return station.call
 
 VOULS = [
     "a", "e", "i", "o", "u"
@@ -125,5 +127,5 @@ def remove_vouls(name, max_size):
             if len(name) <= max_size:
                 return name
         if len(name) == name_size:
-            raise Exception("Couldn't simplify name " + name)
+            raise ValueError("Couldn't simplify name " + name)
 

@@ -4,7 +4,7 @@ import requests
 from pyquery import PyQuery as pq
 
 from station import Station
-from kenwood import KenwoodChannelLine
+from kenwood import KenwoodChannelLine, UnknownBandError
 
 state_codes = {
     "OR": 41
@@ -14,18 +14,27 @@ state_dl_link = "https://www.repeaterbook.com/repeaters/keyResult.php?" \
     "keyword={city}&state_id={state_code}"
 
 def main(state):
+    channels = set()
     if not state in state_codes.keys():
         raise Exception("No state code for state " + state)
 
     state_code = state_codes[state]
 
-    mem_chan = 0
+    mem_chan = 20
     for city in [city.strip() for city in open(state + "-cities.txt", "r")]:
+        if not city:
+            break
         stations = get_city_repeater_info(city, state_code)
         for station in stations:
+            if station.frequency in channels:
+                continue
+            channels.add(station.frequency)
             mem_chan = mem_chan + 1
-            print(KenwoodChannelLine.from_station(mem_chan, station).channelline)
-        break
+            try:
+                channel = KenwoodChannelLine.from_station(mem_chan, station)
+            except UnknownBandError:
+                continue
+            print(channel.channelline)
 
 def parse_frequency(raw_frequency):
     offset_direction = raw_frequency[-1]
@@ -36,7 +45,6 @@ def parse_frequency(raw_frequency):
 
 
 def parse_station_info(city, raw_tr):
-    print(raw_tr)
     tds = raw_tr.findall('td')
     if not tds:
         return None
