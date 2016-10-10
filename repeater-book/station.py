@@ -12,3 +12,15 @@ class Station(object):
     county = attr.ib()
     call = attr.ib()
     use = attr.ib()
+
+@attr.s
+class RadioRefernceStation(object):
+    frequency = attr.ib()
+    input_freq = attr.ib()
+    city = attr.ib()
+    county = attr.ib()
+    state = attr.ib()
+    system_category = attr.ib()
+    alpha_tag = attr.ib()
+    description = attr.ib()
+    service_tag = attr.ib()

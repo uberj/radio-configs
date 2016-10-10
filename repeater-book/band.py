@@ -20,7 +20,7 @@ def cacl_tx_offset(freq):
     elif is_6_meter_freq(freq):
         return 0 # TODO, what is 6 meter offset?
     else:
-        raise UnknownBandError("unkown band for frequency: " + str(freq))
+        return 0 
 
 class UnknownBandError(ValueError):
     pass
